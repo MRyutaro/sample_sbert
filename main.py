@@ -11,7 +11,9 @@ def extract_text_from_html(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
     soup = BeautifulSoup(content, 'html.parser')
-    return soup.get_text()
+    # 空白を削除してテキストを取得
+    text = soup.get_text().replace('\n', '').replace('\r', '').replace('\t', '')
+    return text
 
 
 # 類似度計算を行う関数
@@ -27,6 +29,9 @@ def calculate_similarity(text1, text2):
 def main():
     folder_path = './data'
     html_files = [f for f in os.listdir(folder_path) if f.endswith('.html')]
+    N = 20
+    html_files = html_files[:N]
+    print(f'{N}個のHTMLファイルを読み込みます。')
 
     # CSVファイルにヘッダーを書き込む
     with open('similarity_results.csv', 'w', newline='', encoding='utf-8') as csvfile:
@@ -42,9 +47,14 @@ def main():
             # ファイルからテキストを抽出
             text1 = extract_text_from_html(file1_path)
             text2 = extract_text_from_html(file2_path)
+            print("=====text1=====")
+            print(text1)
+            print("=====text2=====")
+            print(text2)
 
             # 類似度を計算
             similarity_score = calculate_similarity(text1, text2)
+            print("=====similarity_score=====")
             print(f'{html_files[i]} vs {html_files[j]}: {similarity_score}')
 
             # 結果をファイルに逐次書き込む
