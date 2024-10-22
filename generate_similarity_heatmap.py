@@ -6,11 +6,12 @@ from natsort import natsorted
 # CSVファイルからデータを読み込む
 data = pd.read_csv('similarity_results.csv')
 
+# ファイル名で自然順ソート
 data['File1'] = pd.Categorical(data['File1'], categories=natsorted(data['File1'].unique()), ordered=True)
 data['File2'] = pd.Categorical(data['File2'], categories=natsorted(data['File2'].unique()), ordered=True)
 
 # ファイル名でソート
-sorted_data = data.sort_values(by=['File1', 'File2'])
+sorted_data = data.sort_values(by=['File1', 'File2'], key=lambda col: natsorted(col))
 
 # ピボットテーブルを作成して類似度スコアを行列形式にする
 data_pivot = sorted_data.pivot(index='File1', columns='File2', values='Similarity Score')
