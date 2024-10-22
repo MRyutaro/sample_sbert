@@ -1,6 +1,8 @@
-import os
 import csv
+import os
+
 from bs4 import BeautifulSoup
+from natsort import natsorted
 from sentence_transformers import SentenceTransformer, util
 
 MODEL_NAME = 'stsb-xlm-r-multilingual'
@@ -29,6 +31,7 @@ def calculate_similarity(text1, text2):
 def main():
     folder_path = './data'
     html_files = [f for f in os.listdir(folder_path) if f.endswith('.html')]
+    html_files = natsorted(html_files)
     N = 20
     html_files = html_files[:N]
     print(f'{N}個のHTMLファイルを読み込みます。')
